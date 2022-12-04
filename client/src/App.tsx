@@ -1,5 +1,5 @@
 import { LocationOn, Star } from '@mui/icons-material';
-import { format } from 'timeago.js'
+import moment from 'moment';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
@@ -18,7 +18,7 @@ interface Pin {
 function App() {
     const [pins, setPins] = useState(Array<Pin>)
     const [currentPlaceId, setCurrentPlaceId] = useState("")
-    const [showPopup, setShowPopup] = useState(true);
+    const [currentUser, setCurrentUser] = useState("Fion")
     const [viewPoint, setViewPoint] = useState({
         longitude: -100,
         latitude: 40,
@@ -40,30 +40,41 @@ function App() {
         getPins()
     }, [])
 
-    const handleMarkerclick = (id: string) => {
-        setCurrentPlaceId(id)
-    }
+    // const handleMarkerclick = (id: string) => {
+
+    //     setCurrentPlaceId(id)
+    // }
 
     return <Map
         {...viewPoint}
-        style={{ width: '100vw', height: '100vh' }}
+        style={{ width: '100vw', height: '90vh' }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         onMove={nextviewpoint => setViewPoint(nextviewpoint as any)}
     >
         {pins.map((pin) => (
             <>
-                <Marker key={pin._id} longitude={pin.long} latitude={pin.lat} anchor="bottom" >
+                <Marker key={pin._id} longitude={pin.long} latitude={pin.lat} anchor="bottom"
+                >
                     <LocationOn
-                        style={{ fontSize: viewPoint.zoom * 8, color: 'blue' }}
-                        onClick={() => handleMarkerclick(pin._id)}
+                        style={{
+                            fontSize: viewPoint.zoom * 8,
+                            color: currentUser === pin.username ? "tomato" : "blue",
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            setCurrentPlaceId(pin._id)
+                            setViewPoint({ ...viewPoint, latitude: pin.lat, longitude: pin.long })
+                        }}
                     />
                 </Marker>
 
                 {pin._id === currentPlaceId &&
                     < Popup longitude={pin.long} latitude={pin.lat}
                         anchor="left"
-                        onClose={() => setShowPopup(false)}
+                        closeButton={true}
+                        closeOnClick={false}
+                        onClose={() => setCurrentPlaceId("")}
                         key={pin.long}
                     >
 
@@ -84,8 +95,8 @@ function App() {
                                 <Star />
                             </div>
                             <label>Information</label>
-                            <p>Created by {pin.username}</p>
-                            <p className='time'>{format(pin.createdAt)}</p>
+                            <p>Created by <strong>{pin.username}</strong></p>
+                            <p className='time'>{moment(pin.createdAt).fromNow()}</p>
                         </div>
                     </Popup>
                 }
