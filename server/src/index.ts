@@ -8,15 +8,17 @@ const app = express()
 
 dotenv.config()
 
+// middleware
 app.use(express.json())
 app.use(express.urlencoded())
-
 app.use(cors())
-// connect to server
-const PORT = process.env.PORT || 3001
 
+// routes
 app.use('/api/pins', PinRoute)
 app.use('/api/user', UserRoute)
+
+// connect to server
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
     console.log(`Backend server is on: ${PORT}`)

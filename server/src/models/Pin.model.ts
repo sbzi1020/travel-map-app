@@ -4,6 +4,7 @@ import { Document, Schema, model } from 'mongoose';
 export interface IPin extends Document {
     username: string
     title: string
+    disc: string
     rating: number
     lat: number
     long: number
@@ -16,6 +17,11 @@ const PinSchema = new Schema<IPin>({
         required: true,
     },
     title: {
+        type: String,
+        required: true,
+        min: 3
+    },
+    disc: {
         type: String,
         required: true,
         min: 3
