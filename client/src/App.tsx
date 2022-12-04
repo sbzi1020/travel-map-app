@@ -1,7 +1,7 @@
 import { LocationOn, Star } from '@mui/icons-material';
 import moment from 'moment';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import './App.css'
 
@@ -19,6 +19,7 @@ function App() {
     const [pins, setPins] = useState(Array<Pin>)
     const [currentPlaceId, setCurrentPlaceId] = useState("")
     const [currentUser, setCurrentUser] = useState("Fion")
+    const [newPlace, setNewPlace] = useState({ lat: 0, lng: 0 })
     const [viewPoint, setViewPoint] = useState({
         longitude: -100,
         latitude: 40,
@@ -31,7 +32,7 @@ function App() {
         const getPins = async () => {
             try {
                 const res = await axios.get("http://localhost:3001/api/pins")
-                console.log(`${JSON.stringify(res, null, 4)}`)
+                // console.log(`${JSON.stringify(res, null, 4)}`)
                 setPins(res.data)
             } catch (err) {
                 console.log(err)
@@ -45,12 +46,21 @@ function App() {
     //     setCurrentPlaceId(id)
     // }
 
+    const handleAddClick = (e: any) => {
+        const { lng, lat } = e.lngLat as any;
+        setNewPlace({
+            lat, lng
+        })
+        console.log(newPlace)
+    }
+
     return <Map
         {...viewPoint}
         style={{ width: '100vw', height: '90vh' }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         onMove={nextviewpoint => setViewPoint(nextviewpoint as any)}
+        onDblClick={handleAddClick}
     >
         {pins.map((pin) => (
             <>
@@ -70,7 +80,9 @@ function App() {
                 </Marker>
 
                 {pin._id === currentPlaceId &&
-                    < Popup longitude={pin.long} latitude={pin.lat}
+                    < Popup
+                        longitude={pin.long}
+                        latitude={pin.lat}
                         anchor="left"
                         closeButton={true}
                         closeOnClick={false}
@@ -78,10 +90,7 @@ function App() {
                         key={pin.long}
                     >
 
-                        <div
-
-                            className='popup'
-                        >
+                        <div className='popup'>
                             <label>Place</label>
                             <p>{pin.title}</p>
                             <label>Review</label>
@@ -101,9 +110,22 @@ function App() {
                     </Popup>
                 }
             </>
-
-        ))
-        }
+        ))}
+        {newPlace && (
+            < Popup
+                key={newPlace.lat}
+                longitude={newPlace.lng}
+                latitude={newPlace.lat}
+                anchor="left"
+                closeButton={true}
+                closeOnClick={false}
+                onClose={() => setNewPlace({ lat: 0, lng: 0 })}
+            >
+                <div className='popup'>
+                    hello
+                </div>
+            </Popup>
+        )}
     </Map >
 }
 
