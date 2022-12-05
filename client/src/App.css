@@ -27,3 +27,21 @@ p {
 
     font-size: 0.8rem;
 }
+
+.newPlaceForm {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 1rem 0.5rem;
+}
+input, textarea {
+    border: none;
+    border-bottom: 1px solid gray;
+}
+
+input::placeholder, textarea::placeholder {
+    font-size: 12px;
+}
+
