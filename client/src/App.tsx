@@ -2,13 +2,17 @@ import { LocationOn, Star } from '@mui/icons-material';
 import moment from 'moment';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import Map, { Marker, Popup } from 'react-map-gl';
-import './App.css'
-import { Button } from '@mui/material';
-
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import Map, { Marker } from 'react-map-gl';
+import { toast } from 'react-toastify'
+import PopUp from './components/PopUp';
+import MapPopupForm from './components/MapPopupForm';
+import Notify from './components/Notify';
 import Auth from './components/Auth';
+import './App.css'
+
+// import MapPopupForm from './MapPopupForm';
+// import Notify from './Notify';
+// import PopUp from './PopUp';
 
 interface Pin {
     username: string
@@ -20,19 +24,36 @@ interface Pin {
     createdAt: string
     _id: string
 }
+export interface FormValue {
+    title: string
+    disc: string
+    rating: number
+}
+export interface NewPlace {
+    lat: number
+    lng: number
+}
+export interface ViewPoint {
+    longitude: number
+    latitude: number
+    zoom: number
+    pitch?: number
+    bearing?: number
+}
+
 function App() {
     const [pins, setPins] = useState(Array<Pin>)
-    const [currentPlaceId, setCurrentPlaceId] = useState("")
-    const [currentUser, setCurrentUser] = useState("")
-    const [newPlace, setNewPlace] = useState({ lat: 0, lng: 0 })
+    const [currentPlaceId, setCurrentPlaceId] = useState<string>("")
+    const [currentUser, setCurrentUser] = useState<string>("")
+    const [newPlace, setNewPlace] = useState<NewPlace>({ lat: 0, lng: 0 })
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<FormValue>({
         title: "",
         disc: "",
         rating: 0
     })
 
-    const [viewPoint, setViewPoint] = useState({
+    const [viewPoint, setViewPoint] = useState<ViewPoint>({
         longitude: -100,
         latitude: 40,
         zoom: 4
@@ -109,23 +130,23 @@ function App() {
 
     return (
         <>
-
-
             <Map
                 {...viewPoint}
                 style={{ width: '100vw', height: '90vh' }}
                 mapStyle="mapbox://styles/mapbox/streets-v9"
                 mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                onMove={nextviewpoint => setViewPoint(nextviewpoint as any)}
+                onMove={viewport => setViewPoint(viewport as any)}
                 onDblClick={handleAddClick}
             >
+
+                {/* Login&Register====================================== */}
                 <Auth currentUser={currentUser} />
 
+                {/* Pins ====================================== */}
                 {pins.map((pin) => (
                     <div key={pin._id}>
                         <Marker longitude={pin.long} latitude={pin.lat} anchor="bottom"
                         >
-
                             <LocationOn
                                 style={{
                                     fontSize: viewPoint.zoom * 8,
@@ -136,16 +157,13 @@ function App() {
                             />
                         </Marker>
 
+
                         {pin._id === currentPlaceId &&
-                            < Popup
+                            < PopUp
                                 longitude={pin.long}
                                 latitude={pin.lat}
-                                anchor="left"
-                                closeButton={true}
-                                closeOnClick={false}
                                 onClose={() => setCurrentPlaceId("")}
                             >
-
                                 <div className='popup'>
                                     <label>Place</label>
                                     <p>{pin.title}</p>
@@ -159,84 +177,18 @@ function App() {
                                     <p>Created by <strong>{pin.username}</strong></p>
                                     <p className='time'>{moment(new Date(pin.createdAt)).fromNow()}</p>
                                 </div>
-                            </Popup>
+                            </PopUp>
                         }
                     </div>
                 ))
                 }
 
-                {newPlace && (
-                    < Popup
-                        key={newPlace.lat}
-                        longitude={newPlace.lng}
-                        latitude={newPlace.lat}
-                        anchor="left"
-                        closeButton={true}
-                        closeOnClick={false}
-                        onClose={() => {
-                            setNewPlace({ lat: 0, lng: 0 })
-                            setForm({
-                                title: "",
-                                disc: "",
-                                rating: 0
-                            })
-                        }}
-                    >
-                        <form className='newPlaceForm'
-                        >
-                            <label>Title</label>
-                            <input
-                                placeholder='Enter a title'
-                                value={form.title}
-                                onChange={(e: any) => setForm({ ...form, title: e.target.value })}
-                            />
-                            <label>Review</label>
-                            <textarea
-                                placeholder='Tell us more about this place.'
-                                value={form.disc}
+                {/* Add new pin ====================================== */}
+                {newPlace && <MapPopupForm newPlace={newPlace} setNewPlace={setNewPlace} form={form} setForm={setForm} handleSubmit={handleSubmit} />}
 
-                                onChange={(e: any) => setForm({ ...form, disc: e.target.value })}
-                            />
-                            <label>Rating</label>
-                            <select
-                                value={form.rating}
-                                onChange={(e: any) => setForm({ ...form, rating: e.target.value })}>
-                                <option value={1}>1</option>
-                                <option value={2}>2</option>
-                                <option value={3}>3</option>
-                                <option value={4}>4</option>
-                                <option value={5}>5</option>
-                            </select>
-                            <Button variant='contained' size='small' sx={{
-                                backgroundColor: 'tomato',
-                                boxShadow: 1,
-                                '&:hover': {
-                                    backgroundColor: 'white',
-                                    color: 'tomato',
-                                    border: '1px solid tomato',
-                                    boxShadow: 0
-                                }
-                            }}
-                                onClick={handleSubmit}
-                            >Submit</Button>
-                        </form>
-                    </Popup>)
-                }
-
-
-                <ToastContainer
-                    position="bottom-right"
-                    autoClose={1000}
-                    hideProgressBar={true}
-                    newestOnTop={true}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                />
-            </Map >
+                {/* Notification ====================================== */}
+                <Notify />
+            </Map>
 
         </>)
 }

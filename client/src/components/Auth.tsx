@@ -1,10 +1,14 @@
 import { Button } from "@mui/material"
+import { redirect } from "react-router-dom"
 
 interface IAuth {
     currentUser: string
 }
 const Auth = (props: IAuth) => {
     const { currentUser } = props
+    const handleOnClick = () => {
+        return redirect(`/login`)
+    }
     return (
         <div>
             {currentUser ? (
@@ -12,8 +16,10 @@ const Auth = (props: IAuth) => {
                     position: 'absolute',
                     top: '10px',
                     right: '10px',
-                    backgroundColor: 'tomato'
-                }}>Logout</Button>
+                    backgroundColor: 'tomato',
+                }}
+                    onClick={handleOnClick}
+                >Logout</Button>
             ) : (
                 <div className='accessButtonContainer'>
                     <Button variant='contained' style={{ backgroundColor: 'tomato', marginRight: '1rem' }}>Login</Button>
