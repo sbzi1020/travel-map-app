@@ -9,6 +9,10 @@ import MapPopupForm from './components/MapPopupForm';
 import Notify from './components/Notify';
 import Auth from './components/Auth';
 import './App.css'
+import { Outlet } from 'react-router-dom';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import MapContainer from './components/MapContainer';
 
 // import MapPopupForm from './MapPopupForm';
 // import Notify from './Notify';
@@ -128,15 +132,19 @@ function App() {
 
     }
 
+    // {...viewPoint}
+    // style={{ width: '100vw', height: '90vh' }}
+    // mapStyle="mapbox://styles/mapbox/streets-v9"
+    // mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+    // onMove={(viewport: any) => setViewPoint(viewport as any)}
+    // onDblClick={handleAddClick}
     return (
         <>
-            <Map
+            <MapContainer
                 {...viewPoint}
-                style={{ width: '100vw', height: '90vh' }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-                mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                onMove={viewport => setViewPoint(viewport as any)}
                 onDblClick={handleAddClick}
+                viewPoint={viewPoint}
+                setViewPoint={setViewPoint}
             >
 
                 {/* Login&Register====================================== */}
@@ -188,8 +196,11 @@ function App() {
 
                 {/* Notification ====================================== */}
                 <Notify />
-            </Map>
+            </MapContainer>
+            <Register />
+            <Login />
 
+            <Outlet />
         </>)
 }
 

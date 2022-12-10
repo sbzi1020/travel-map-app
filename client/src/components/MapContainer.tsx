@@ -4,10 +4,11 @@ import Map, { Marker } from 'react-map-gl';
 interface Props {
     children: ReactNode
     viewPoint: any
-    setViewPoint: ({ }) => Dispatch<any>
-    onDblClick: () => void
+    setViewPoint: Dispatch<React.SetStateAction<any>>
+    onDblClick: (e: any) => void
+    other?: any
 }
-const MapComponent = ({ children, viewPoint, setViewPoint, onDblClick }: Props) => {
+const MapContainer = ({ other, children, viewPoint, setViewPoint, onDblClick }: Props) => {
 
     return (
         <Map
@@ -17,6 +18,7 @@ const MapComponent = ({ children, viewPoint, setViewPoint, onDblClick }: Props) 
             mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             onMove={nextviewpoint => setViewPoint(nextviewpoint)}
             onDblClick={onDblClick}
+            {...other}
         >
             {children}
         </Map >
@@ -24,4 +26,4 @@ const MapComponent = ({ children, viewPoint, setViewPoint, onDblClick }: Props) 
     )
 }
 
-export default MapComponent;
+export default MapContainer;
