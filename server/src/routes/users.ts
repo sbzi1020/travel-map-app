@@ -8,17 +8,28 @@ const UserRoute = express.Router()
 UserRoute.get('/is_valid_user', async (req, res) => {
 
     try {
+        // const query = UserModel.where({ username: req.query });
+
+        // console.log(`backend===== query: ${JSON.stringify(query, null, 4)}`)
+
+        // query.findOne(function(err: any, username: any) {
+        //     if (username) {
+
+        //         console.log(`backend===== user: ${JSON.stringify(username, null, 4)}`)
+        //     } else {
+        //         res.status(404).json(err)
+        //     }
+        // });
         const userParam = req.query
         console.log(`${JSON.stringify(userParam, null, 4)}`)
-        // const user = await UserModel.findOne({ username: req.body.usename })
-        // console.log(`backend===== user: ${JSON.stringify(user, null, 4)}`)
-        res.json(userParam)
-        // if (user){
-
-        // // res.status(200).json(user)
-        // } else {
-        //     // res.json({Error: `Can't find user`})
-        // }
+        const user = await UserModel.findOne(userParam)
+        if (user) {
+            // console.log(`username exist`)
+            res.status(200).send(`usename exist`)
+        } else {
+            res.json({ Error: `Can't find user` })
+        }
+        // res.send(user)
     } catch (err) {
         res.status(404).json(err)
     }
@@ -35,6 +46,7 @@ UserRoute.post('/register', async (req, res) => {
         // verify is it user already register
         const user = await UserModel.findOne({ username: req.body.username })
 
+        console.log(`backend===== user: ${JSON.stringify(req.body.username, null, 4)}`)
         if (!user) {
             // create new user
             const newUser = new UserModel({
@@ -42,6 +54,7 @@ UserRoute.post('/register', async (req, res) => {
                 email: req.body.email,
                 password: hashedPassword
             })
+            console.log(`backend===== new user: ${JSON.stringify(newUser, null, 4)}`)
 
             // console.log(`backend register: ${JSON.stringify(newUser, null, 4)}`)
             // save user and send response

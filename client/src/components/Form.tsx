@@ -1,7 +1,6 @@
 import { Button, Card, IconButton, InputAdornment, TextField, Typography } from "@mui/material"
 import { styled } from '@mui/material/styles'
 import { Form, FormikHelpers, FormikProps, FormikProvider, useFormik } from "formik"
-import { redirect } from "react-router-dom"
 import { Stack } from "@mui/system"
 import * as Yup from 'yup'
 import { useState } from "react"
@@ -50,26 +49,22 @@ const FormComponent = ({ type }: Props) => {
             password: ''
         },
         validationSchema: RegisterSchema,
-        onSubmit: async (values: FormValue, submitForm: FormikHelpers<FormValue>) => {
-            // redirect(`/`) 
-
-            console.log(`======submit: ${JSON.stringify(values, null, 4)}`)
-            // save form values
-            const newUser = {
-                username: values.username,
-                email: values.email?.toLowerCase(),
-                password: values.password
-            }
-
-            console.log(`click onSubmit: ${JSON.stringify(newUser, null, 4)}`)
-            // // post values to DB
-            // try{
-            //     const res =  axios.post('/api/user/register', newUser)
-            //     console.log(`post user: ${JSON.stringify(res,null, 4)}`)
-            // }catch(err: any) {
-            //     console.log(err.massage)
-            // }
-
+        validateOnChange: true,
+        onSubmit: async (values: FormValue) => {
+            alert(JSON.stringify(values, null, 2));
+        // // post values to DB
+            //
+        const newUser = {
+            username: values.username,
+            email: values.email?.toLowerCase(),
+            password: values.password
+        }
+        try{
+            const res =  await axios.post('http://localhost:3001/api/user/register', newUser)
+            console.log(`post user: ${JSON.stringify(res,null, 4)}`)
+        }catch(err: any) {
+            console.log(err.massage)
+        }
 
         }
     })
@@ -90,9 +85,11 @@ const FormComponent = ({ type }: Props) => {
             password: values.password
         }
 
-        console.log(`click onSubmit: ${JSON.stringify(newUser.username, null, 4)}`)
+        // console.log(`click onSubmit: ${JSON.stringify(newUser.username, null, 4)}`)
         try {
-            await axios.get(`http://localhost:3001/api/user/is_valid_user?username=${newUser.username}`)
+            const res = await axios.get(`http://localhost:3001/api/user/is_valid_user?username=${newUser.username}`)
+
+            console.log(`click onSubmit: ${JSON.stringify(res.data, null, 4)}`)
         } catch (err: any) {
             console.log(err.massage)
         }
@@ -100,12 +97,12 @@ const FormComponent = ({ type }: Props) => {
 
         // console.log(`click onSubmit: ${JSON.stringify(newUser, null, 4)}`)
         // // post values to DB
-        //     try{
-        //         const res =  await axios.post('http://localhost:3001/api/user/register', newUser)
-        //         console.log(`post user: ${JSON.stringify(res,null, 4)}`)
-        //     }catch(err: any) {
-        //         console.log(err.massage)
-        //     }
+        // try{
+        //     const res =  await axios.post('http://localhost:3001/api/user/register', newUser)
+        //     console.log(`post user: ${JSON.stringify(res,null, 4)}`)
+        // }catch(err: any) {
+        //     console.log(err.massage)
+        // }
     }
 
     return (
@@ -114,8 +111,7 @@ const FormComponent = ({ type }: Props) => {
             <FormikProvider value={formik}>
                 <Form
                     autoComplete="false"
-                    noValidate
-                    onSubmit={() => console.log('submit===========================')}
+                    onSubmit={handleSubmit}
                 >
                     <Stack direction='column' spacing={1} sx={{ color: 'black' }}>
                         <Stack>
@@ -191,7 +187,6 @@ const FormComponent = ({ type }: Props) => {
                                 }
                             }}
 
-                            onClick={handleOnClickSubmit}
                         >Register</Button>
                     </Stack>
                 </Form>
