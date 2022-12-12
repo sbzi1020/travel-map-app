@@ -82,21 +82,30 @@ const FormComponent = ({ type }: Props) => {
     }
     const handleOnClickSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
-        // save form values
+
+        // // save form values
         const newUser = {
             username: values.username,
             email: values.email?.toLowerCase(),
             password: values.password
         }
 
-        console.log(`click onSubmit: ${JSON.stringify(newUser, null, 4)}`)
-        // // post values to DB
-        try{
-            const res =  await axios.post('http://localhost:3001/api/user/register', newUser)
-            console.log(`post user: ${JSON.stringify(res,null, 4)}`)
-        }catch(err: any) {
+        console.log(`click onSubmit: ${JSON.stringify(newUser.username, null, 4)}`)
+        try {
+            await axios.get(`http://localhost:3001/api/user/is_valid_user?username=${newUser.username}`)
+        } catch (err: any) {
             console.log(err.massage)
         }
+        //
+
+        // console.log(`click onSubmit: ${JSON.stringify(newUser, null, 4)}`)
+        // // post values to DB
+        //     try{
+        //         const res =  await axios.post('http://localhost:3001/api/user/register', newUser)
+        //         console.log(`post user: ${JSON.stringify(res,null, 4)}`)
+        //     }catch(err: any) {
+        //         console.log(err.massage)
+        //     }
     }
 
     return (

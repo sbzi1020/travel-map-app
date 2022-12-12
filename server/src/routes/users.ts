@@ -5,10 +5,20 @@ const UserRoute = express.Router()
 
 
 // get user
-UserRoute.get('/', async (req, res) => {
+UserRoute.get('/is_valid_user', async (req, res) => {
+
     try {
-        const user = await UserModel.findOne({ username: req.body })
-        res.status(200).json(user)
+        const userParam = req.query
+        console.log(`${JSON.stringify(userParam, null, 4)}`)
+        // const user = await UserModel.findOne({ username: req.body.usename })
+        // console.log(`backend===== user: ${JSON.stringify(user, null, 4)}`)
+        res.json(userParam)
+        // if (user){
+
+        // // res.status(200).json(user)
+        // } else {
+        //     // res.json({Error: `Can't find user`})
+        // }
     } catch (err) {
         res.status(404).json(err)
     }
@@ -47,23 +57,23 @@ UserRoute.post('/register', async (req, res) => {
     }
 })
 
-UserRoute.post('/login', async (req, res) => {
-    try {
-        // find user
-        const user = await UserModel.findOne({ username: req.body.username })
-        // validate password
-        if (user) {
-            const validPassword = await bcrypt.compare(req.body.password, user.password)
-            !validPassword && res.status(400).json("Wrong username or password!")
+// UserRoute.post('/login', async (req, res) => {
+//     try {
+//         // find user
+//         const user = await UserModel.findOne({ username: req.body.username })
+//         // validate password
+//         if (user) {
+//             const validPassword = await bcrypt.compare(req.body.password, user.password)
+//             !validPassword && res.status(400).json("Wrong username or password!")
 
-            // send response
-            res.status(200).json({ _id: user._id, username: user.username })
-        } else {
-            res.status(400).json("Wrong username or password!")
-        }
-    } catch (err) {
-        res.status(404).json(err)
-    }
-})
+//             // send response
+//             res.status(200).json({ _id: user._id, username: user.username })
+//         } else {
+//             res.status(400).json("Wrong username or password!")
+//         }
+//     } catch (err) {
+//         res.status(404).json(err)
+//     }
+// })
 
 export default UserRoute
