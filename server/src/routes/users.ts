@@ -4,6 +4,15 @@ import { UserModel } from '../models/User.model'
 const UserRoute = express.Router()
 
 
+// get user
+UserRoute.get('/', async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ username: req.body })
+        res.status(200).json(user)
+    } catch (err) {
+        res.status(404).json(err)
+    }
+})
 // create a user
 UserRoute.post('/register', async (req, res) => {
     try {
@@ -12,17 +21,27 @@ UserRoute.post('/register', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
-        // create new user
-        const newUser = new UserModel({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword
-        })
+        // find the user if in DB 
+        // verify is it user already register
+        const user = await UserModel.findOne({ username: req.body.username })
 
-        // save user and send response
-        // write to DB
-        await newUser.save()
-        res.status(201).json(newUser._id)
+        if (!user) {
+            // create new user
+            const newUser = new UserModel({
+                username: req.body.username,
+                email: req.body.email,
+                password: hashedPassword
+            })
+
+            // console.log(`backend register: ${JSON.stringify(newUser, null, 4)}`)
+            // save user and send response
+            // write to DB
+            await newUser.save()
+            res.status(201).json(newUser._id)
+        } else {
+            res.json({ Error: `User already exist` })
+        }
+
     } catch (err) {
         res.status(404).json(err)
     }
