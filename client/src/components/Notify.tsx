@@ -1,12 +1,12 @@
 import React from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 const Notify = () => {
     return (
         <ToastContainer
             position="bottom-right"
-            autoClose={1000}
+            autoClose={2000}
             hideProgressBar={true}
             newestOnTop={true}
             closeOnClick

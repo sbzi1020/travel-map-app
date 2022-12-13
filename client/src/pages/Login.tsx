@@ -7,6 +7,8 @@ import { useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios"
+import Notify from "../components/Notify"
+import { toast } from "react-toastify"
 
 interface FormValue {
     username: string
@@ -60,8 +62,12 @@ const Login = () => {
         try {
             const res = await axios.post('http://localhost:3001/api/user/register', user)
             console.log(`post user: ${JSON.stringify(res, null, 4)}`)
+
+            toast.success(`Welcome to Trama! ${user.username}`)
         } catch (err: any) {
             console.log(err.massage)
+
+            toast.error(`Created fail: ${err.massage}`)
         }
     }
 
@@ -155,6 +161,8 @@ const Login = () => {
                     </Form>
                 )}
             </Formik>
+
+            <Notify />
         </FormContainer >
     )
 }

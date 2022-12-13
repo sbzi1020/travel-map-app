@@ -1,14 +1,14 @@
 import { Button } from "@mui/material"
-import { redirect } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 interface IAuth {
     currentUser: string
 }
 const Auth = (props: IAuth) => {
     const { currentUser } = props
-    const handleOnClick = () => {
-        return redirect(`/login`)
-    }
+    
+    const navigate = useNavigate()
+
     return (
         <div>
             {currentUser ? (
@@ -18,13 +18,24 @@ const Auth = (props: IAuth) => {
                     right: '10px',
                     backgroundColor: 'tomato',
                 }}
-                    onClick={handleOnClick}
+                    onClick={() => navigate('/', { replace: true })}
                 >Logout</Button>
             ) : (
                 <div className='accessButtonContainer'>
-                    <Button variant='contained' style={{ backgroundColor: 'tomato', marginRight: '1rem' }}>Login</Button>
+                    <Button
+                        variant='contained'
+                        style={{ backgroundColor: 'tomato', marginRight: '1rem' }}
+                        onClick={() => navigate('/login', { replace: true })}
+                    >
+                        Login
+                    </Button>
 
-                    <Button variant='contained' style={{ backgroundColor: 'tomato' }}>Register</Button>
+                    <Button
+                        variant='contained'
+                        style={{ backgroundColor: 'tomato' }}
+                        onClick={() => navigate('/register', { replace: true })}
+                    >
+                        Register</Button>
                 </div>
             )
             }

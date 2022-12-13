@@ -8,6 +8,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import Notify from "../components/Notify"
 
 interface FormValue {
     username: string
@@ -50,6 +52,7 @@ const Register = () => {
     }
     // , e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     const navigate = useNavigate()
+
     const handleOnClickSubmit = async (values: FormValue) => {
         // e.preventDefault()
 
@@ -63,10 +66,13 @@ const Register = () => {
         try {
             const res = await axios.post('http://localhost:3001/api/user/register', newUser)
             console.log(`post user: ${JSON.stringify(res, null, 4)}`)
+
+            toast.success(`Welcome to Trama! ${newUser.username}`)
             navigate('/', { replace: true })
 
         } catch (err: any) {
             console.log(err.massage)
+            toast.error(`Created fail: ${err.massage}`)
         }
 
 
@@ -202,6 +208,7 @@ const Register = () => {
                     </Form>
                 )}
             </Formik>
+            <Notify />
         </FormContainer >
     )
 }

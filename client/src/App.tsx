@@ -197,10 +197,7 @@ function App() {
                 {/* Notification ====================================== */}
                 <Notify />
             </MapContainer>
-            <Register />
-            // <Login />
-
-            <Outlet />
+           <Outlet />
         </>)
 }
 
