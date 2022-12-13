@@ -3,17 +3,16 @@ import { styled } from '@mui/material/styles'
 import { Field, Form, Formik } from "formik"
 import { Stack } from "@mui/system"
 import * as Yup from 'yup'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios"
 import Notify from "../components/Notify"
 import { toast } from "react-toastify"
+import { AppStateService } from "../states/state_service"
+import { User } from "./Register"
+import { useNavigate } from "react-router-dom"
 
-interface FormValue {
-    username: string
-    password: string
-}
 
 const FormContainer = styled(Card)({
     width: '300px',
@@ -33,7 +32,27 @@ const FormContainer = styled(Card)({
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
+    const [currentUser, setCurrentUser] = useState<string>('')
+    // const [appState, setAppState] = useState(AppStateService.getLatest())
 
+    // console.log(`appState: ${JSON.stringify(appState, null, 4)}`)
+    // useEffect(() => {
+    //     AppStateService.getUser(currentUser)
+    //     console.log(`latest currentUser: ${JSON.stringify(currentUser, null, 4)}`)
+    //     console.log(`latest appState: ${JSON.stringify(appState, null, 4)}`)
+    // }, [currentUser])
+
+
+    // useEffect(() => {
+    //     let subscription = AppStateService.$state.subscribe((latestState) => {
+    //         setAppState(latestState)
+    //     })
+
+    //     console.log(`subscription`)
+    //     return () => {
+    //         subscription.unsubscribe()
+    //     }
+    // }, [])
     //
     // Register validate schema=====================
     //
@@ -48,26 +67,33 @@ const Login = () => {
         setShowPassword((show) => !show)
     }
     // , e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    const handleOnClickSubmit = async (values: FormValue) => {
+
+    const navigate = useNavigate()
+    const handleOnClickSubmit = async (values: User) => {
         // e.preventDefault()
 
         // // save form values
-        const user: FormValue = {
+        const user: User = {
             username: values.username,
             password: values.password
         }
 
-        // console.log(`click onSubmit: ${JSON.stringify(newUser, null, 4)}`)
+        console.log(`click onSubmit: ${JSON.stringify(user, null, 4)}`)
         // post values to DB
         try {
-            const res = await axios.post('http://localhost:3001/api/user/register', user)
-            console.log(`post user: ${JSON.stringify(res, null, 4)}`)
+            const res = await axios.post('http://localhost:3001/api/user/login', user)
+            // console.log(`post user: ${JSON.stringify(res, null, 4)}`)
+            setCurrentUser(res.data.username)
 
-            toast.success(`Welcome to Trama! ${user.username}`)
+            console.log(`res data: ${JSON.stringify(res.data.username, null, 4)}`)
+            console.log(`setCurrentUser: ${JSON.stringify(currentUser, null, 4)}`)
+            toast.success(`Welcome back! ${user.username}`)
+            navigate('/', { replace: true })
+
         } catch (err: any) {
             console.log(err.massage)
 
-            toast.error(`Created fail: ${err.massage}`)
+            toast.error(`Login fail: ${err.massage}`)
         }
     }
 
@@ -83,7 +109,7 @@ const Login = () => {
                 validationSchema={loginSchema}
                 onSubmit={handleOnClickSubmit}
             >
-                {({ errors, touched, getFieldProps, validateForm, handleChange}: any) => (
+                {({ errors, touched, getFieldProps, validateForm, handleChange }: any) => (
                     <Form>
                         <Stack direction='column' spacing={1} sx={{ color: 'black' }}>
                             <Stack>
@@ -155,7 +181,7 @@ const Login = () => {
                                     }
                                 }}
                                 type="submit"
-                                onClick={() => validateForm().then(() => console.log('submit success'))}
+                                onClick={() => validateForm().then(() => console.log('onClick'))}
                             >Login</Button>
                         </Stack>
                     </Form>
