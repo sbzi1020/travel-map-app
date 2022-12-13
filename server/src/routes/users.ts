@@ -5,31 +5,17 @@ const UserRoute = express.Router()
 
 
 // get user
-UserRoute.get('/is_valid_user', async (req, res) => {
+UserRoute.get('/is_valid_username', async (req, res) => {
 
     try {
-        // const query = UserModel.where({ username: req.query });
-
-        // console.log(`backend===== query: ${JSON.stringify(query, null, 4)}`)
-
-        // query.findOne(function(err: any, username: any) {
-        //     if (username) {
-
-        //         console.log(`backend===== user: ${JSON.stringify(username, null, 4)}`)
-        //     } else {
-        //         res.status(404).json(err)
-        //     }
-        // });
         const userParam = req.query
         console.log(`${JSON.stringify(userParam, null, 4)}`)
         const user = await UserModel.findOne(userParam)
         if (user) {
-            // console.log(`username exist`)
-            res.status(200).send(`usename exist`)
+            res.status(200).send(`Usename exist`)
         } else {
-            res.json({ Error: `Can't find user` })
+            res.json({ Error: `user doesn't register yet` })
         }
-        // res.send(user)
     } catch (err) {
         res.status(404).json(err)
     }

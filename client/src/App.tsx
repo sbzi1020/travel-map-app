@@ -198,7 +198,7 @@ function App() {
                 <Notify />
             </MapContainer>
             <Register />
-            <Login />
+            // <Login />
 
             <Outlet />
         </>)
