@@ -7,7 +7,7 @@ export interface AppState {
 
 const initState: AppState = {
     user: {
-        username: ''
+        username: localStorage.getItem('user') as string
     },
 }
 

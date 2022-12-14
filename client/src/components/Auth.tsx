@@ -4,23 +4,26 @@ import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import Notify from "./Notify"
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import { Dispatch, useEffect } from "react"
 
-interface IAuth {
+interface Props {
     currentUser: string
+    // setCurrentUser: Dispatch<React.SetStateAction<string>>
 }
-const Auth = (props: IAuth) => {
+const Auth = (props: Props) => {
     const { currentUser } = props
 
     const navigate = useNavigate()
+
 
     return (
         <div>
             {currentUser ? (
 
                 <div className='accessButtonContainer'>
-                    <Stack direction='column' sx={{ marginRight: '7rem !important', alignItems: 'center'}}>
+                    <Stack direction='column' sx={{ marginRight: '7rem !important', alignItems: 'center' }}>
                         <PersonPinIcon sx={{ color: 'tomato' }} />
-                        <Typography sx={{fontWeight: 'bold'}}>
+                        <Typography sx={{ fontWeight: 'bold' }}>
                             {`Welcome, ${currentUser}`}
                         </Typography>
                     </Stack>
@@ -35,6 +38,7 @@ const Auth = (props: IAuth) => {
                             navigate('/', { replace: true })
                             AppStateService.setUser('')
                             toast.success(`Logout user`)
+                            localStorage.removeItem('user')
                             return (
                                 <Notify />
                             )

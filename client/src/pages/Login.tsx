@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles'
 import { Field, Form, Formik } from "formik"
 import { Stack } from "@mui/system"
 import * as Yup from 'yup'
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios"
@@ -34,6 +34,7 @@ const FormContainer = styled(Card)({
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
 
+    const navigate = useNavigate()
     //
     // Register validate schema=====================
     //
@@ -48,9 +49,9 @@ const Login = () => {
         setShowPassword((show) => !show)
     }
 
-    const navigate = useNavigate()
-
-
+    //
+    // handle submit=====================
+    //
     const handleOnClickSubmit = async (values: User) => {
         // e.preventDefault()
 
@@ -68,7 +69,7 @@ const Login = () => {
 
             AppStateService.setUser(res.data.username)
 
-
+            window.localStorage.setItem('user', res.data.username)
             toast.success(`Welcome back! ${user.username}`)
             navigate('/', { replace: true })
 
