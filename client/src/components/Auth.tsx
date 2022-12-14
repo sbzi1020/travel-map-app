@@ -1,12 +1,17 @@
 import { Button } from "@mui/material"
+import { Dispatch } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { AppStateService } from "../states/state_service"
+import Notify from "./Notify"
 
 interface IAuth {
     currentUser: string
+    // setCurrentUser: Dispatch<React.SetStateAction<any>>
 }
 const Auth = (props: IAuth) => {
     const { currentUser } = props
-    
+
     const navigate = useNavigate()
 
     return (
@@ -16,9 +21,16 @@ const Auth = (props: IAuth) => {
                     position: 'absolute',
                     top: '10px',
                     right: '10px',
-                    backgroundColor: 'tomato',
+                    backgroundColor: 'blue',
                 }}
-                    onClick={() => navigate('/', { replace: true })}
+                    onClick={() => {
+                        navigate('/', { replace: true })
+                        AppStateService.setUser('')
+                        toast.success(`Logout user`)
+                        return (
+                            <Notify />
+                        )
+                    }}
                 >Logout</Button>
             ) : (
                 <div className='accessButtonContainer'>

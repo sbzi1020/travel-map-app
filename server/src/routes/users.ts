@@ -4,13 +4,12 @@ import { UserModel } from '../models/User.model'
 const UserRoute = express.Router()
 
 
-// get user
+// validate username for register
 UserRoute.get('/is_valid_username', async (req, res) => {
 
     try {
-        const userParam = req.query
-        console.log(`${JSON.stringify(userParam, null, 4)}`)
-        const user = await UserModel.findOne(userParam)
+        const userQuery = req.query
+        const user = await UserModel.findOne(userQuery)
         if (user) {
             res.status(200).send(`Usename exist`)
         } else {
@@ -56,23 +55,43 @@ UserRoute.post('/register', async (req, res) => {
     }
 })
 
-// UserRoute.post('/login', async (req, res) => {
-//     try {
-//         // find user
-//         const user = await UserModel.findOne({ username: req.body.username })
-//         // validate password
-//         if (user) {
-//             const validPassword = await bcrypt.compare(req.body.password, user.password)
-//             !validPassword && res.status(400).json("Wrong username or password!")
+// Login
+UserRoute.post('/login', async (req, res) => {
+    try {
+        // find user
+        const user = await UserModel.findOne({ username: req.body.username })
 
-//             // send response
-//             res.status(200).json({ _id: user._id, username: user.username })
+        // validate password
+        if (user) {
+            const validPassword = await bcrypt.compare(req.body.password, user.password)
+            !validPassword && res.status(400).send("Wrong username or password!")
+
+            // send response
+            res.status(200).json({ _id: user._id, username: user.username })
+        } else {
+            res.status(400).json("Wrong username or password!")
+        }
+    } catch (err) {
+        res.status(404).json(err)
+    }
+})
+
+// get user
+// UserRoute.get('/login/user', async (req, res) => {
+
+//     try {
+//         const userParam = req.params
+//         console.log(`server userParam: ${JSON.stringify(userParam, null, 4)}`)
+//         const user = await UserModel.findOne(userParam)
+//         if (user) {
+
+//         console.log(`server user: ${JSON.stringify(user, null, 4)}`)
+//             res.status(200).json(user)
 //         } else {
-//             res.status(400).json("Wrong username or password!")
+//             res.json({ Error: `user doesn't register yet` })
 //         }
 //     } catch (err) {
 //         res.status(404).json(err)
 //     }
 // })
-
 export default UserRoute

@@ -13,7 +13,7 @@ const MapContainer = ({ other, children, viewPoint, setViewPoint, onDblClick }: 
     return (
         <Map
             {...viewPoint}
-            style={{ width: '100vw', height: '90vh' }}
+            style={{ width: '100vw', height: '100vh' }}
             mapStyle="mapbox://styles/mapbox/streets-v9"
             mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             onMove={nextviewpoint => setViewPoint(nextviewpoint)}

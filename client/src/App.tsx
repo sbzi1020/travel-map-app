@@ -10,9 +10,8 @@ import Notify from './components/Notify';
 import Auth from './components/Auth';
 import './App.css'
 import { Outlet } from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
 import MapContainer from './components/MapContainer';
+import { AppStateService } from './states/state_service';
 
 // import MapPopupForm from './MapPopupForm';
 // import Notify from './Notify';
@@ -48,8 +47,12 @@ export interface ViewPoint {
 function App() {
     const [pins, setPins] = useState(Array<Pin>)
     const [currentPlaceId, setCurrentPlaceId] = useState<string>("")
-    const [currentUser, setCurrentUser] = useState<string>("")
     const [newPlace, setNewPlace] = useState<NewPlace>({ lat: 0, lng: 0 })
+    const [appState, setAppState] = useState(AppStateService.getLatest())
+
+    console.log(`====AppState: ${JSON.stringify(appState, null, 4)}`)
+
+    const currentUser = appState.user.username
 
     const [form, setForm] = useState<FormValue>({
         title: "",
@@ -63,6 +66,18 @@ function App() {
         zoom: 4
     })
 
+
+    //
+    // subscribe to AppStateService
+    //
+    useEffect(() => {
+        let subscription = AppStateService.$state.subscribe((latestState) => {
+            setAppState(latestState)
+        })
+        return () => {
+            subscription.unsubscribe()
+        }
+    }, [])
     //
     // fetch API
     //
@@ -87,12 +102,16 @@ function App() {
     }
 
     const handleAddClick = (e: any) => {
-        const { lng, lat } = e.lngLat as any;
-        setNewPlace({
-            lat, lng
-        })
-        // clear the pre pin popup
-        setCurrentPlaceId("")
+        if (currentUser) {
+            const { lng, lat } = e.lngLat as any;
+            setNewPlace({
+                lat, lng
+            })
+            // clear the pre pin popup
+            setCurrentPlaceId("")
+        } else {
+            toast.error(`Please Login`)
+        }
     }
 
     const handleSubmit = async (e: any) => {
@@ -132,12 +151,6 @@ function App() {
 
     }
 
-    // {...viewPoint}
-    // style={{ width: '100vw', height: '90vh' }}
-    // mapStyle="mapbox://styles/mapbox/streets-v9"
-    // mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-    // onMove={(viewport: any) => setViewPoint(viewport as any)}
-    // onDblClick={handleAddClick}
     return (
         <>
             <MapContainer
@@ -148,7 +161,7 @@ function App() {
             >
 
                 {/* Login&Register====================================== */}
-                <Auth currentUser={currentUser} />
+                <Auth currentUser={currentUser}/>
 
                 {/* Pins ====================================== */}
                 {pins.map((pin) => (
@@ -192,12 +205,12 @@ function App() {
                 }
 
                 {/* Add new pin ====================================== */}
-                {newPlace && <MapPopupForm newPlace={newPlace} setNewPlace={setNewPlace} form={form} setForm={setForm} handleSubmit={handleSubmit} />}
+                {currentUser && newPlace && <MapPopupForm newPlace={newPlace} setNewPlace={setNewPlace} form={form} setForm={setForm} handleSubmit={handleSubmit} />}
 
                 {/* Notification ====================================== */}
                 <Notify />
             </MapContainer>
-           <Outlet />
+            <Outlet />
         </>)
 }
 

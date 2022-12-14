@@ -32,22 +32,16 @@ const FormContainer = styled(Card)({
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
-    const [currentUser, setCurrentUser] = useState<string>('')
+
     // const [appState, setAppState] = useState(AppStateService.getLatest())
 
     // console.log(`appState: ${JSON.stringify(appState, null, 4)}`)
-    // useEffect(() => {
-    //     AppStateService.getUser(currentUser)
-    //     console.log(`latest currentUser: ${JSON.stringify(currentUser, null, 4)}`)
-    //     console.log(`latest appState: ${JSON.stringify(appState, null, 4)}`)
-    // }, [currentUser])
 
 
     // useEffect(() => {
     //     let subscription = AppStateService.$state.subscribe((latestState) => {
     //         setAppState(latestState)
     //     })
-
     //     console.log(`subscription`)
     //     return () => {
     //         subscription.unsubscribe()
@@ -69,6 +63,11 @@ const Login = () => {
     // , e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 
     const navigate = useNavigate()
+
+    // useEffect(() => {
+    //     // setUsername('')
+    // }, [username])
+
     const handleOnClickSubmit = async (values: User) => {
         // e.preventDefault()
 
@@ -77,16 +76,16 @@ const Login = () => {
             username: values.username,
             password: values.password
         }
-
-        console.log(`click onSubmit: ${JSON.stringify(user, null, 4)}`)
+        // console.log(`click onSubmit: ${JSON.stringify(user, null, 4)}`)
+        //
         // post values to DB
         try {
             const res = await axios.post('http://localhost:3001/api/user/login', user)
-            // console.log(`post user: ${JSON.stringify(res, null, 4)}`)
-            setCurrentUser(res.data.username)
+            // console.log(`res data: ${JSON.stringify(typeof res.data.username, null, 4)}`)
 
-            console.log(`res data: ${JSON.stringify(res.data.username, null, 4)}`)
-            console.log(`setCurrentUser: ${JSON.stringify(currentUser, null, 4)}`)
+            AppStateService.setUser(res.data.username)
+
+
             toast.success(`Welcome back! ${user.username}`)
             navigate('/', { replace: true })
 

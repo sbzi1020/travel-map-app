@@ -11,10 +11,10 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import Notify from "../components/Notify"
 
-interface FormValue {
+export interface User {
     username: string
     email?: string
-    password: string
+    password?: string
 }
 
 const FormContainer = styled(Card)({
@@ -53,15 +53,16 @@ const Register = () => {
     // , e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     const navigate = useNavigate()
 
-    const handleOnClickSubmit = async (values: FormValue) => {
+    const handleOnClickSubmit = async (values: User) => {
         // e.preventDefault()
 
         // // save form values
-        const newUser: FormValue = {
+        const newUser: User = {
             username: values.username,
             email: values.email?.toLowerCase(),
             password: values.password
         }
+            console.log(`newUser: ${JSON.stringify(newUser, null, 4)}`)
         // post values to DB
         try {
             const res = await axios.post('http://localhost:3001/api/user/register', newUser)
