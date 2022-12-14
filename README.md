@@ -11,6 +11,7 @@
 
 ##### Backend
 - Express
+- REST API
 - MongoDB
 - Mongoose
 
