@@ -10,6 +10,7 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import Notify from "../components/Notify"
+import { PersonPinCircle } from "@mui/icons-material"
 
 export interface User {
     username: string
@@ -62,14 +63,13 @@ const Register = () => {
             email: values.email?.toLowerCase(),
             password: values.password
         }
-            console.log(`newUser: ${JSON.stringify(newUser, null, 4)}`)
+        console.log(`newUser: ${JSON.stringify(newUser, null, 4)}`)
         // post values to DB
         try {
-            const res = await axios.post('http://localhost:3001/api/user/register', newUser)
-            console.log(`post user: ${JSON.stringify(res, null, 4)}`)
+            await axios.post('http://localhost:3001/api/user/register', newUser)
 
             toast.success(`Welcome to Trama! ${newUser.username}`)
-            navigate('/', { replace: true })
+            navigate('/login', { replace: true })
 
         } catch (err: any) {
             console.log(err.massage)
@@ -87,7 +87,6 @@ const Register = () => {
 
             const res = await axios.get(`http://localhost:3001/api/user/is_valid_username?username=${value}`)
 
-            // console.log(`validateUsername: ${JSON.stringify(res.data, null, 4)}`)
             if (res.data.length > 0) {
                 errMsg = res.data
             }
@@ -100,8 +99,14 @@ const Register = () => {
 
     return (
         <FormContainer>
-            <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
-
+            <Stack direction='row' spacing={1} sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'tomato',
+            }}>
+                <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
+                <PersonPinCircle />
+            </Stack>
             <Formik
                 initialValues={{
                     username: '',
@@ -205,7 +210,23 @@ const Register = () => {
                                 }}
                                 type="submit"
                             >Register</Button>
+
+                            <Button variant='contained'
+                                sx={{
+                                    backgroundColor: 'tomato',
+                                    textTransform: 'none',
+                                    boxShadow: 0,
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                        border: '1px solid tomato',
+                                        color: 'tomato',
+                                        boxShadow: 0,
+                                    }
+                                }}
+                                onClick={() => navigate('/', { replace: true })}
+                            >Cancel</Button>
                         </Stack>
+
                     </Form>
                 )}
             </Formik>

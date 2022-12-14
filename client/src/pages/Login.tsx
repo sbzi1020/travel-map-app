@@ -12,6 +12,7 @@ import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import { User } from "./Register"
 import { useNavigate } from "react-router-dom"
+import { PersonPinCircle } from "@mui/icons-material"
 
 
 const FormContainer = styled(Card)({
@@ -33,20 +34,6 @@ const FormContainer = styled(Card)({
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
 
-    // const [appState, setAppState] = useState(AppStateService.getLatest())
-
-    // console.log(`appState: ${JSON.stringify(appState, null, 4)}`)
-
-
-    // useEffect(() => {
-    //     let subscription = AppStateService.$state.subscribe((latestState) => {
-    //         setAppState(latestState)
-    //     })
-    //     console.log(`subscription`)
-    //     return () => {
-    //         subscription.unsubscribe()
-    //     }
-    // }, [])
     //
     // Register validate schema=====================
     //
@@ -60,13 +47,9 @@ const Login = () => {
     const handleShowPassword = () => {
         setShowPassword((show) => !show)
     }
-    // , e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 
     const navigate = useNavigate()
 
-    // useEffect(() => {
-    //     // setUsername('')
-    // }, [username])
 
     const handleOnClickSubmit = async (values: User) => {
         // e.preventDefault()
@@ -98,7 +81,14 @@ const Login = () => {
 
     return (
         <FormContainer>
-            <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
+            <Stack direction='row' spacing={1} sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'tomato',
+            }}>
+                <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
+                <PersonPinCircle />
+            </Stack>
 
             <Formik
                 initialValues={{
@@ -182,6 +172,21 @@ const Login = () => {
                                 type="submit"
                                 onClick={() => validateForm().then(() => console.log('onClick'))}
                             >Login</Button>
+
+                            <Button variant='contained'
+                                sx={{
+                                    backgroundColor: 'tomato',
+                                    textTransform: 'none',
+                                    boxShadow: 0,
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                        border: '1px solid tomato',
+                                        color: 'tomato',
+                                        boxShadow: 0,
+                                    }
+                                }}
+                                onClick={() => navigate('/', { replace: true })}
+                            >Cancel</Button>
                         </Stack>
                     </Form>
                 )}

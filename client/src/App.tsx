@@ -1,4 +1,4 @@
-import { LocationOn, Star } from '@mui/icons-material';
+import { PersonPinCircle, LocationOn, Star } from '@mui/icons-material';
 import moment from 'moment';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import './App.css'
 import { Outlet } from 'react-router-dom';
 import MapContainer from './components/MapContainer';
 import { AppStateService } from './states/state_service';
+import { Stack, Typography } from '@mui/material';
 
 // import MapPopupForm from './MapPopupForm';
 // import Notify from './Notify';
@@ -50,7 +51,7 @@ function App() {
     const [newPlace, setNewPlace] = useState<NewPlace>({ lat: 0, lng: 0 })
     const [appState, setAppState] = useState(AppStateService.getLatest())
 
-    console.log(`====AppState: ${JSON.stringify(appState, null, 4)}`)
+    // console.log(`====AppState: ${JSON.stringify(appState, null, 4)}`)
 
     const currentUser = appState.user.username
 
@@ -63,7 +64,7 @@ function App() {
     const [viewPoint, setViewPoint] = useState<ViewPoint>({
         longitude: -100,
         latitude: 40,
-        zoom: 4
+        zoom: 5
     })
 
 
@@ -161,21 +162,33 @@ function App() {
             >
 
                 {/* Login&Register====================================== */}
-                <Auth currentUser={currentUser}/>
+                <Auth currentUser={currentUser} />
 
                 {/* Pins ====================================== */}
                 {pins.map((pin) => (
                     <div key={pin._id}>
                         <Marker longitude={pin.long} latitude={pin.lat} anchor="bottom"
                         >
-                            <LocationOn
+                            {currentUser && currentUser === pin.username ? 
+                                <PersonPinCircle
+                                    style={{
+                                        fontSize: viewPoint.zoom * 8,
+                                        color: 'tomato',
+                                        cursor: 'pointer'
+                                    }}
+
+                                    onClick={() => handleMarkerclick(pin._id, pin.lat, pin.long)}
+                                />
+                                : <LocationOn
                                 style={{
                                     fontSize: viewPoint.zoom * 8,
-                                    color: currentUser === pin.username ? "tomato" : "blue",
+                                    color: "blue",
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => handleMarkerclick(pin._id, pin.lat, pin.long)}
-                            />
+                            /> 
+                                }
+
                         </Marker>
 
 

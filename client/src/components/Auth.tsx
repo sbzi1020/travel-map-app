@@ -1,13 +1,12 @@
-import { Button } from "@mui/material"
-import { Dispatch } from "react"
+import { Button, Stack, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import Notify from "./Notify"
+import PersonPinIcon from '@mui/icons-material/PersonPin';
 
 interface IAuth {
     currentUser: string
-    // setCurrentUser: Dispatch<React.SetStateAction<any>>
 }
 const Auth = (props: IAuth) => {
     const { currentUser } = props
@@ -17,26 +16,40 @@ const Auth = (props: IAuth) => {
     return (
         <div>
             {currentUser ? (
-                <Button variant='contained' style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    backgroundColor: 'blue',
-                }}
-                    onClick={() => {
-                        navigate('/', { replace: true })
-                        AppStateService.setUser('')
-                        toast.success(`Logout user`)
-                        return (
-                            <Notify />
-                        )
+
+                <div className='accessButtonContainer'>
+                    <Stack direction='column' sx={{ marginRight: '7rem !important', alignItems: 'center'}}>
+                        <PersonPinIcon sx={{ color: 'tomato' }} />
+                        <Typography sx={{fontWeight: 'bold'}}>
+                            {`Welcome, ${currentUser}`}
+                        </Typography>
+                    </Stack>
+                    <Button variant='contained' style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        backgroundColor: 'tomato',
+                        textTransform: 'capitalize'
                     }}
-                >Logout</Button>
+                        onClick={() => {
+                            navigate('/', { replace: true })
+                            AppStateService.setUser('')
+                            toast.success(`Logout user`)
+                            return (
+                                <Notify />
+                            )
+                        }}
+                    >Logout</Button>
+                </div>
             ) : (
                 <div className='accessButtonContainer'>
                     <Button
                         variant='contained'
-                        style={{ backgroundColor: 'tomato', marginRight: '1rem' }}
+                        style={{
+                            backgroundColor: 'tomato',
+                            marginRight: '1rem',
+                            textTransform: 'capitalize'
+                        }}
                         onClick={() => navigate('/login', { replace: true })}
                     >
                         Login
@@ -44,7 +57,7 @@ const Auth = (props: IAuth) => {
 
                     <Button
                         variant='contained'
-                        style={{ backgroundColor: 'tomato' }}
+                        style={{ backgroundColor: 'tomato', textTransform: 'capitalize' }}
                         onClick={() => navigate('/register', { replace: true })}
                     >
                         Register</Button>
