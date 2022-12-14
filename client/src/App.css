@@ -35,7 +35,7 @@ p {
     height: 250px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: ;
     margin: 1rem 0.5rem;
 }
 input, textarea {

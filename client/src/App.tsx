@@ -1,8 +1,8 @@
-import { LocationOn, Star } from '@mui/icons-material';
+import { LocationOn } from '@mui/icons-material';
 import moment from 'moment';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import Map, { Marker } from 'react-map-gl';
+import { Marker } from 'react-map-gl';
 import { toast } from 'react-toastify'
 import PopUp from './components/PopUp';
 import MapPopupForm from './components/MapPopupForm';
@@ -43,6 +43,7 @@ export interface ViewPoint {
 
 function App() {
     const [pins, setPins] = useState(Array<Pin>)
+    const [showPop, setShowPop] = useState(false)
     const [currentPlaceId, setCurrentPlaceId] = useState<string>("")
     const [newPlace, setNewPlace] = useState<NewPlace>({ lat: 0, lng: 0 })
     const [appState, setAppState] = useState(AppStateService.getLatest())
@@ -98,6 +99,7 @@ function App() {
     const handleMarkerclick = (id: string, lat: number, long: number) => {
         setCurrentPlaceId(id)
         setViewPoint({ ...viewPoint, latitude: lat, longitude: long })
+        setShowPop(true)
     }
 
     const handleAddClick = (e: any) => {
@@ -158,9 +160,9 @@ function App() {
                 viewPoint={viewPoint}
                 setViewPoint={setViewPoint}
             >
-
+                
                 {/* Login&Register====================================== */}
-                <Auth currentUser={currentUser} />
+                <Auth currentUser={currentUser} setShowPop={setShowPop}/>
 
                 {/* Pins ====================================== */}
                 {pins.map((pin) => (
@@ -190,7 +192,7 @@ function App() {
                         </Marker>
 
 
-                        {pin._id === currentPlaceId &&
+                        {pin._id === currentPlaceId && showPop &&
                             < PopUp
                                 longitude={pin.long}
                                 latitude={pin.lat}

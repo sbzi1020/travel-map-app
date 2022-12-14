@@ -12,7 +12,7 @@ import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import { User } from "./Register"
 import { useNavigate } from "react-router-dom"
-import { PersonPinCircle } from "@mui/icons-material"
+import Logo from "../components/Logo"
 
 
 const FormContainer = styled(Card)({
@@ -82,15 +82,7 @@ const Login = () => {
 
     return (
         <FormContainer>
-            <Stack direction='row' spacing={1} sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'tomato',
-            }}>
-                <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
-                <PersonPinCircle />
-            </Stack>
-
+            <Logo />
             <Formik
                 initialValues={{
                     username: '',

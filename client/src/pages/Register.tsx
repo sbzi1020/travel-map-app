@@ -10,7 +10,7 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import Notify from "../components/Notify"
-import { PersonPinCircle } from "@mui/icons-material"
+import Logo from "../components/Logo"
 
 export interface User {
     username: string
@@ -99,14 +99,7 @@ const Register = () => {
 
     return (
         <FormContainer>
-            <Stack direction='row' spacing={1} sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'tomato',
-            }}>
-                <Typography variant='h5' sx={{ color: 'tomato', textAlign: 'center', fontWeight: 'bold' }}>Trama</Typography>
-                <PersonPinCircle />
-            </Stack>
+            <Logo />
             <Formik
                 initialValues={{
                     username: '',

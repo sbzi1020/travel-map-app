@@ -4,21 +4,35 @@ import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import Notify from "./Notify"
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import Logo from "./Logo"
+import { Dispatch } from "react"
 
 interface Props {
     currentUser: string
+    setShowPop: Dispatch<React.SetStateAction<boolean>>
     // setCurrentUser: Dispatch<React.SetStateAction<string>>
 }
 const Auth = (props: Props) => {
-    const { currentUser } = props
+    const { currentUser, setShowPop } = props
 
     const navigate = useNavigate()
 
 
     return (
         <div>
-            {currentUser ? (
+            <Logo
+                sx={{
+                    position: 'absolute',
+                    top: '1rem',
+                    left: '2rem',
+                    border: '3px solid tomato',
+                    padding: '0.2rem',
+                    backgroundColor: 'white',
+                    borderRadius: '5px'
 
+                }}
+            />
+            {currentUser ? (
                 <div className='accessButtonContainer'>
                     <Stack direction='column' sx={{ marginRight: '7rem !important', alignItems: 'center' }}>
                         <PersonPinIcon sx={{ color: 'tomato' }} />
@@ -38,6 +52,7 @@ const Auth = (props: Props) => {
                             AppStateService.setUser('')
                             toast.success(`Logout user`)
                             localStorage.removeItem('user')
+                            setShowPop(false)
                             return (
                                 <Notify />
                             )
@@ -53,7 +68,10 @@ const Auth = (props: Props) => {
                             marginRight: '1rem',
                             textTransform: 'capitalize'
                         }}
-                        onClick={() => navigate('/login', { replace: true })}
+                        onClick={() => {
+                            setShowPop(false)
+                            navigate('/login', { replace: true })
+                        }}
                     >
                         Login
                     </Button>
@@ -61,13 +79,16 @@ const Auth = (props: Props) => {
                     <Button
                         variant='contained'
                         style={{ backgroundColor: 'tomato', textTransform: 'capitalize' }}
-                        onClick={() => navigate('/register', { replace: true })}
+                        onClick={() => {
+                            setShowPop(false)
+                            navigate('/register', { replace: true })
+                        }}
                     >
                         Register</Button>
                 </div>
             )
             }
-        </div>
+        </div >
     )
 }
 export default Auth
