@@ -3,24 +3,23 @@
 }
 .popup {
     width: 250px;
-    height: 250px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     margin: 1rem 0.5rem;
 }
 
-label {
+.label {
     width: max-content;
     color: tomato;
     font-size: 13px;
     font-weight: bold;
-    border-bottom: 1px solid tomato;
-    margin: 2px 0
 }
+
 p {
-    margin: 2px;
     font-size: 15px;
+    overflow: hidden
 }
 .stars {
     font-size: 0.3rem;
@@ -36,7 +35,7 @@ p {
     height: 250px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     margin: 1rem 0.5rem;
 }
 input, textarea {

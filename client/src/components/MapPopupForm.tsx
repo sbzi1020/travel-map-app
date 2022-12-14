@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Button, Rating, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { FormValue, NewPlace } from '../App'
 import PopUp from './PopUp'
@@ -29,31 +29,36 @@ const MapPopupForm = ({ newPlace, setNewPlace, form, setForm, handleSubmit }: Pr
                 })
             }}
         >
-            <form className='newPlaceForm'
-            >
-                <label>Title</label>
-                <input
-                    placeholder='Enter a title'
-                    value={form.title}
-                    onChange={(e: any) => setForm({ ...form, title: e.target.value })}
-                />
-                <label>Review</label>
-                <textarea
-                    placeholder='Tell us more about this place.'
-                    value={form.disc}
-
-                    onChange={(e: any) => setForm({ ...form, disc: e.target.value })}
-                />
-                <label>Rating</label>
-                <select
-                    value={form.rating}
-                    onChange={(e: any) => setForm({ ...form, rating: e.target.value })}>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                </select>
+            <Stack direction='column' className='popup' spacing={1}>
+                <Stack spacing={2}
+                    sx={{ marginBottom: '1rem' }}
+                >
+                    <Typography variant='h6' textAlign='center'>Add a place</Typography>
+                    <TextField
+                        id="outlined-basic"
+                        label="Place"
+                        placeholder='Enter a title'
+                        variant="outlined"
+                        value={form.title}
+                        onChange={(e: any) => setForm({ ...form, title: e.target.value })}
+                    />
+                    <TextField
+                        id="outlined-textarea"
+                        label="Review"
+                        multiline
+                        rows={6}
+                        maxRows={6}
+                        variant="outlined"
+                        placeholder='Tell us more about this place.'
+                        value={form.disc}
+                        onChange={(e: any) => setForm({ ...form, disc: e.target.value })}
+                    />
+                    <Rating
+                        name="simple-controlled"
+                        value={form.rating}
+                        onChange={(e: any) => setForm({ ...form, rating: e.target.value })}
+                    />
+                </Stack>
                 <Button variant='contained' size='small' sx={{
                     backgroundColor: 'tomato',
                     boxShadow: 1,
@@ -66,7 +71,8 @@ const MapPopupForm = ({ newPlace, setNewPlace, form, setForm, handleSubmit }: Pr
                 }}
                     onClick={handleSubmit}
                 >Submit</Button>
-            </form>
+            </Stack>
+
         </PopUp>)
 }
 

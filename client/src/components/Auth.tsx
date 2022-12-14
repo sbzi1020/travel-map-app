@@ -4,7 +4,6 @@ import { toast } from "react-toastify"
 import { AppStateService } from "../states/state_service"
 import Notify from "./Notify"
 import PersonPinIcon from '@mui/icons-material/PersonPin';
-import { Dispatch, useEffect } from "react"
 
 interface Props {
     currentUser: string

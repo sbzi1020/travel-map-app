@@ -12,6 +12,7 @@ import './App.css'
 import { Outlet } from 'react-router-dom';
 import MapContainer from './components/MapContainer';
 import { AppStateService } from './states/state_service';
+import { Rating, Stack, Typography } from '@mui/material';
 
 interface Pin {
     username: string
@@ -195,19 +196,27 @@ function App() {
                                 latitude={pin.lat}
                                 onClose={() => setCurrentPlaceId("")}
                             >
-                                <div className='popup'>
-                                    <label>Place</label>
-                                    <p>{pin.title}</p>
-                                    <label>Review</label>
-                                    <p>{pin.disc}</p>
-                                    <label>Rating</label>
-                                    <div className='stars'>
-                                        {Array(pin.rating).fill(<Star />)}
-                                    </div>
-                                    <label>Information</label>
-                                    <p>Created by <strong>{pin.username}</strong></p>
-                                    <p className='time'>{moment(new Date(pin.createdAt)).fromNow()}</p>
-                                </div>
+                                <Stack direction='column' className='popup' spacing={1}>
+                                    <Stack >
+                                        <Typography variant='subtitle2' className='label'>Place</Typography>
+                                        <Typography variant='h6'>{pin.title}</Typography>
+                                    </Stack>
+                                    <Stack >
+                                        <Typography variant='subtitle2' className='label'>Review</Typography>
+                                        <Typography variant='caption' sx={{ height: 'auto', overflow: 'auto' }}>{pin.disc}</Typography>
+                                    </Stack>
+                                    <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                                        <Typography variant='subtitle2' className='label'>Rating</Typography>
+                                        <Rating name="read-only" value={pin.rating} readOnly />
+                                    </Stack>
+                                    <Stack >
+                                        <Typography variant='subtitle2' className='label'>Information</Typography>
+                                        <Stack direction='row' justifyContent='space-between'>
+                                            <Typography variant='subtitle2'>{pin.username}</Typography>
+                                            <Typography variant='caption'>{moment(new Date(pin.createdAt)).fromNow()}</Typography>
+                                        </Stack>
+                                    </Stack>
+                                </Stack>
                             </PopUp>
                         }
                     </div>
